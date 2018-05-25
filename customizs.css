@@ -1,0 +1,5 @@
+
+.dx-scheduler-timeline .dx-scheduler-header-panel-cell:not(.dx-scheduler-header-panel-week-cell),
+.dx-scheduler-timeline .dx-scheduler-date-table-cell {
+  width: 100px;
+}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>DevExtreme with RequireJS and Knockout example</title>
+
+  <link rel="stylesheet" type="text/css" href="devextreme_amd/dist/css/dx.common.css" />
+  <link rel="stylesheet" type="text/css" href="devextreme_amd/dist/css/dx.light.css" />
+  <script src="node_modules/requirejs/require.js"></script>
+  <link rel="stylesheet" type="text/css" href="customizs.css" />
+</head>
+
+<body>
+ 
+  <div>
+      <p>
+          Building List:
+          <select data-bind="options: buildingData, optionsText: 'buildingName',value:selectedBuilding,
+          optionsCaption: 'Choose...'"></select>
+      </p>
+      <div data-bind="visible: selectedBuilding"> <!-- Appears when you select something -->
+        You have chosen 
+        <span data-bind="text: selectedBuilding() ? selectedBuilding().buildingName : 'unknown'"></span>.
+    </div>
+  </div>
+   <div data-bind="dxScheduler: schedulerOptions"></div>
+    <script>
+    require.config({
+      paths: {
+        "jquery": "node_modules/jquery/dist/jquery",
+        "knockout": "node_modules/knockout/build/output/knockout-latest",
+        "devextreme": "devextreme_amd"
+      }
+    });
+
+    require(["knockout","jquery", "devextreme/integration/knockout"
+      ,"data2", "devextreme/ui/scheduler/ui.scheduler"
+    ], function (ko,$, dialog,data) {
+      var viewModel = {
+        buildingData:data.buildingData,
+        
+        selectedBuilding:ko.observable(),
+
+         schedulerOptions: {
+          dataSource: data.selectedData,
+          views: ['timelineDay', 'timelineWeek', 'timelineWorkWeek', 'timelineMonth'],
+          currentView: 'timelineMonth',          
+          currentDate: new Date(2017, 4, 1),
+          firstDayOfWeek: 0,
+            startDayHour: 8,
+            endDayHour: 20,
+            cellDuration: 20,
+            height: 600,
+            groups: ["Apartment","Bed"],            
+           resources: data.resources,           
+        }
+        
+      };
+      viewModel.selectedBuilding.subscribe(function(item){
+       
+         var filterData = $.grep(data.data(),function(obj){
+           return obj.BuildingId == item.buildingId;
+         });
+         data.selectedData(filterData);
+         
+         var apts = $.grep(data.apartmentData(),function(obj){
+           return obj.BuildingId == item.buildingId;
+         });
+
+         data.selectedApartmentData(apts);
+        }),
+      ko.applyBindings(viewModel);
+    });
+  </script>
+</body>
+
+</html>
