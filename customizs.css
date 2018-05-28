@@ -3,3 +3,9 @@
 .dx-scheduler-timeline .dx-scheduler-date-table-cell {
   width: 100px;
 }
+.dx-scheduler-all-day-table-cell.dx-state-hover,
+.dx-scheduler-date-table-cell.dx-state-hover:before {
+  background-color:white;
+  content:"Double Click to book the appointment";
+  color:black
+}

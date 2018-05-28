@@ -11,20 +11,19 @@
 </head>
 
 <body>
- 
+  
   <div>
-      <p>
-          Building List:
-          <select data-bind="options: buildingData, optionsText: 'buildingName',value:selectedBuilding,
+    <p>
+      Building List:
+      <select data-bind="options: buildingData, optionsText: 'buildingName',value:selectedBuilding,
           optionsCaption: 'Choose...'"></select>
-      </p>
-      <div data-bind="visible: selectedBuilding"> <!-- Appears when you select something -->
-        You have chosen 
-        <span data-bind="text: selectedBuilding() ? selectedBuilding().buildingName : 'unknown'"></span>.
-    </div>
+    </p>
   </div>
-   <div data-bind="dxScheduler: schedulerOptions"></div>
-    <script>
+  <br/>
+
+  <div data-bind="dxScheduler: schedulerOptions"></div>
+
+  <script>
     require.config({
       paths: {
         "jquery": "node_modules/jquery/dist/jquery",
@@ -33,43 +32,49 @@
       }
     });
 
-    require(["knockout","jquery", "devextreme/integration/knockout"
-      ,"data2", "devextreme/ui/scheduler/ui.scheduler"
-    ], function (ko,$, dialog,data) {
+    require(["knockout", "jquery", "devextreme/integration/knockout"
+      , "data2", "devextreme/ui/scheduler/ui.scheduler"
+    ], function (ko, $, dialog, data) {
       var viewModel = {
-        buildingData:data.buildingData,
-        
-        selectedBuilding:ko.observable(),
+        buildingData: data.buildingData,
+        selectedBuilding: ko.observable(),
 
-         schedulerOptions: {
+        schedulerOptions: {
           dataSource: data.selectedData,
           views: ['timelineDay', 'timelineWeek', 'timelineWorkWeek', 'timelineMonth'],
-          currentView: 'timelineMonth',          
+          currentView: 'timelineMonth',
           currentDate: new Date(2017, 4, 1),
           firstDayOfWeek: 0,
-            startDayHour: 8,
-            endDayHour: 20,
-            cellDuration: 20,
-            height: 600,
-            groups: ["Apartment","Bed"],            
-           resources: data.resources,           
+          startDayHour: 8,
+          endDayHour: 20,
+          cellDuration: 20,
+          height: 600,
+          groups: ["Apartment", "Bed"],
+          resources: data.resources
+          //  dataCellTemplate:function(cellData,index,container){
+          //    container.textContent="Click here"
+          //    container.bgColor="white"
+          //    container.onfocus=function(){
+          //      alert("test");
+          //    }
+          //  }
         }
-        
-      };
-      viewModel.selectedBuilding.subscribe(function(item){
-       
-         var filterData = $.grep(data.data(),function(obj){
-           return obj.BuildingId == item.buildingId;
-         });
-         data.selectedData(filterData);
-         
-         var apts = $.grep(data.apartmentData(),function(obj){
-           return obj.BuildingId == item.buildingId;
-         });
 
-         data.selectedApartmentData(apts);
-        }),
-      ko.applyBindings(viewModel);
+      };
+      viewModel.selectedBuilding.subscribe(function (item) {
+
+        var filterData = $.grep(data.data(), function (obj) {
+          return obj.BuildingId == item.buildingId;
+        });
+        data.selectedData(filterData);
+
+        var apts = $.grep(data.apartmentData(), function (obj) {
+          return obj.BuildingId == item.buildingId;
+        });
+
+        data.selectedApartmentData(apts);
+      }),
+        ko.applyBindings(viewModel);
     });
   </script>
 </body>
